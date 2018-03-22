@@ -37,7 +37,10 @@ export default {
       // 调用接口,提交用户信息
       login(params)
         .then(res => {
-          if (res.mata.status === 200) {
+          if (res.meta.status === 200) {
+            // 存储token
+            // setItem('k',value -- token通过文档查看)
+            localStorage.setItem('mytoken', res.data.token)
             // 登陆成功,跳转主页
             this.$router.push({name: 'home'})
           } else {

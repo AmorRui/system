@@ -3,11 +3,20 @@
 </template>
 
 <script>
+import {testData} from '../API/api.js'
 export default {
   data () {
-    return {
-
-    }
+    return { }
+  },
+  mounted () {
+    testData({
+      query: '',
+      pagename: 1,
+      pagesize: 10
+    })
+      .then(res => {
+        console.log(res)
+      })
   }
 }
 </script>
