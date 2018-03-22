@@ -30,15 +30,18 @@ export default {
     login: function () {
       let params = {
         // this.$router.push({name: 'home'})
+        // 调用登陆接口
         username: this.username,
         password: this.password
       }
+      // 调用接口,提交用户信息
       login(params)
         .then(res => {
-          console.log(res)
           if (res.mata.status === 200) {
+            // 登陆成功,跳转主页
             this.$router.push({name: 'home'})
           } else {
+            // 登陆失败,提示用户
             console.log('用户名或者密码错误')
           }
         })
