@@ -21,7 +21,7 @@ export default new Router({
       redirect: '/welcome', // 重定向到子路由
       children: [
         {path: '/welcome', component: Welcome},
-        {path: '/user', component: User}
+        {path: '/users', component: User}
       ]
     }
   ]

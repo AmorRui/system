@@ -40,7 +40,7 @@
             <i class="el-icon-location"></i>
             <span slot="title">用户管理</span>
           </template>
-          <el-menu-item index="/user">
+          <el-menu-item index="/users">
             <i class="el-icon-menu"></i>
             <span>用户列表</span>
           </el-menu-item>
@@ -139,8 +139,6 @@ export default {
     handleClose (key, keyPath) {
       console.log(key, keyPath)
     }
-  },
-  mounted () {
   }
 }
 </script>
