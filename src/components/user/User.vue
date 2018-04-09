@@ -41,6 +41,23 @@
           label="角色"
           width="100">
         </el-table-column>
+        <el-table-column
+          prop="my_state"
+          label="用户状态"
+          width="80">
+          <template slot-scope="scope">
+            <el-switch @change='toggleUser(scope.row)' v-model="scope.row.mg_state"></el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          width="200">
+          <template slot-scope="scope">
+            <el-button size="small" type="primary" icon="el-icon-edit" plain disabled></el-button>
+            <el-button size="small" type="danger" icon="el-icon-delete" plain disabled></el-button>
+            <el-button size="small" type="warning" icon="el-icon-check" plain disabled></el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <div>
@@ -58,7 +75,7 @@
 </template>
 
 <script>
-import {getUserData} from '../../api/api.js'
+import {getUserData, toggleUserState} from '../../api/api.js'
 export default {
   data () {
     return {
@@ -70,6 +87,20 @@ export default {
     }
   },
   methods: {
+    toggleUser (data) {
+      toggleUserState({
+        uId: data.id,
+        state: data.mg_state
+      })
+        .then(res => {
+          if (res.meta.status === 200) {
+            this.$message({
+              message: res.meta.msg,
+              type: 'success'
+            })
+          }
+        })
+    },
     handleSizeChange (val) {
       this.pagesize = val
       this.initList()
@@ -85,7 +116,6 @@ export default {
         pagesize: this.pagesize
       })
         .then(res => {
-          console.log(res)
           if (res.meta.status === 200) {
             this.tableData = res.data.users
             this.total = res.data.total
@@ -101,16 +131,23 @@ export default {
 </script>
 
 <style scoped>
- .el-breadcrumb,
- .el-pagination {
+ .el-breadcrumb {
+   padding-left: 20px;
    height: 40px;
    line-height: 40px;
-   background-color: #ccc;
+   background-color: #D3DCE6;
  }
  .el-breadcrumb :hover {
-   color: olive;
+   color: rgb(90, 159, 190);
  }
  .search {
    width: 300px;
+ }
+ .el-pagination {
+    padding-top: 10px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background-color: #D3DCE6;
  }
 </style>

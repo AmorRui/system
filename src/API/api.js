@@ -29,3 +29,11 @@ export const getUserData = (params) => {
     return res.data
   })
 }
+
+// put user my-state
+export const toggleUserState = (params) => {
+  return axios.put('users/' + params.uId + '/state/' + params.state)
+    .then(res => {
+      return res.data
+    })
+}
