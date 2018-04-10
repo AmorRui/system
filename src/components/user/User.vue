@@ -53,9 +53,9 @@
           label="操作"
           width="200">
           <template slot-scope="scope">
-            <el-button size="small" type="primary" icon="el-icon-edit" plain disabled @click="editHandler(scope.row)"></el-button>
-            <el-button size="small" type="danger" icon="el-icon-delete" plain disabled></el-button>
-            <el-button size="small" type="warning" icon="el-icon-check" plain disabled></el-button>
+            <el-button size="small" type="primary" icon="el-icon-edit" plain  @click='editHandler(scope.row)'></el-button>
+            <el-button size="small" type="danger" icon="el-icon-delete" plain @click="deleteHandler(scope.row)"></el-button>
+            <el-button size="small" type="warning" icon="el-icon-check" plain ></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import {getUserData, toggleUserState, addUser, getUserById, editUser} from '../../api/api.js'
+import {getUserData, toggleUserState, addUser, getUserById, editUser, deleteUser} from '../../api/api.js'
 export default {
   data () {
     return {
@@ -164,6 +164,28 @@ export default {
     }
   },
   methods: {
+    deleteHandler (row) {
+      this.$confirm('此操作将永久删除用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteUser({id: row.id}).then(res => {
+          if (res.meta.status === 200) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.initList()
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
     // 查询id
     editHandler (row) {
       // 根据id查询最新的数据
@@ -175,7 +197,7 @@ export default {
           this.euser.email = res.data.email
           this.euser.mobile = res.data.mobile
           // 显示弹窗
-          this.dialogVisible4Edit = true
+          this.dialogVisibleEdit = true
         }
       })
     },

@@ -58,3 +58,10 @@ export const editUser = (params) => {
     return res.data
   })
 }
+
+// delete user deleteUser
+export const deleteUser = (params) => {
+  return axios.delete('roles/' + params.id).then(res => {
+    return res.data
+  })
+}
