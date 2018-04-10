@@ -45,3 +45,16 @@ export const addUser = (params) => {
       return res.data
     })
 }
+
+// get user getUserById
+export const getUserById = (params) => {
+  return axios.get('users/' + params.id).then(res => {
+    return res.data
+  })
+}
+// put user edit
+export const editUser = (params) => {
+  return axios.put('users/' + params.id, params).then(res => {
+    return res.data
+  })
+}

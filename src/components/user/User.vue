@@ -53,7 +53,7 @@
           label="操作"
           width="200">
           <template slot-scope="scope">
-            <el-button size="small" type="primary" icon="el-icon-edit" plain disabled></el-button>
+            <el-button size="small" type="primary" icon="el-icon-edit" plain disabled @click="editHandler(scope.row)"></el-button>
             <el-button size="small" type="danger" icon="el-icon-delete" plain disabled></el-button>
             <el-button size="small" type="warning" icon="el-icon-check" plain disabled></el-button>
           </template>
@@ -96,11 +96,33 @@
         <el-button type="primary" @click='submitUser'>确 定</el-button>
       </span>
     </el-dialog>
+        <!-- 编辑用户弹窗 -->
+    <el-dialog
+      title="编辑用户"
+      @close='closeUserDialog("edit")'
+      :visible="dialogVisibleEdit"
+      width="50%">
+      <el-form ref="userformEdit" :rules="rules" :model="euser" label-width="80px">
+        <el-form-item label="用户名" prop='username'>
+          <el-button plain type="info">{{euser.username}}</el-button>
+        </el-form-item>
+        <el-form-item label="邮箱" prop='email'>
+          <el-input v-model="euser.email"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" prop='mobile'>
+          <el-input v-model="euser.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleAdd = false">取 消</el-button>
+        <el-button type="primary" @click="submitUserEdit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {getUserData, toggleUserState, addUser} from '../../api/api.js'
+import {getUserData, toggleUserState, addUser, getUserById, editUser} from '../../api/api.js'
 export default {
   data () {
     return {
@@ -132,6 +154,7 @@ export default {
           { required: true, message: '请输入手机号码', trigger: 'blur' }
         ]
       },
+      dialogVisibleEdit: false,
       dialogVisibleAdd: false,
       query: '',
       currentPage: 1,
@@ -141,6 +164,38 @@ export default {
     }
   },
   methods: {
+    // 查询id
+    editHandler (row) {
+      // 根据id查询最新的数据
+      getUserById({id: row.id}).then(res => {
+        if (res.meta.status === 200) {
+          // 填充表单
+          this.euser.id = res.data.id
+          this.euser.username = res.data.username
+          this.euser.email = res.data.email
+          this.euser.mobile = res.data.mobile
+          // 显示弹窗
+          this.dialogVisible4Edit = true
+        }
+      })
+    },
+    // 编辑用户
+    submitUserEdit () {
+      // 编辑提交用户
+      this.$refs['userformEdit'].validate(valid => {
+        if (valid) {
+          // 提交表单
+          editUser(this.euser).then(res => {
+            if (res.meta.status === 200) {
+              // 关闭窗口
+              this.dialogVisibleEdit = false
+              // 刷新列表
+              this.initList()
+            }
+          })
+        }
+      })
+    },
     // 提交用户
     submitUser () {
       // 提交用户信息
