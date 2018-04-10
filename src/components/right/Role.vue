@@ -10,6 +10,27 @@
         border
         :data="tableData"
         style="width: 100%">
+      <el-table-column type="expand">
+        <template slot-scope='scope'>
+          <el-row :key="item.id" v-for="item in scope.row.children">
+            <el-col :span="3">
+              <el-tag @close="deleteRight(scope.row, item.id)" closable>{{item.authName}}</el-tag>
+              <i v-if="item.children.length>0" class="el-icon-arrow-right arrow"></i>
+            </el-col>
+            <el-col :span="21">
+              <el-row class="authlist" :key="tag.id" v-for="tag in item.children">
+                <el-col :span="4">
+                  <el-tag @close="deleteRight(scope.row, tag.id)" type="success" closable>{{tag.authName}}</el-tag>
+                  <i v-if="tag.children.length>0" class="el-icon-arrow-right arrow"></i>
+                </el-col>
+                <el-col :span="20">
+                  <el-tag @close="deleteRight(scope.row, btn.id)" :key="btn.id" type="warning" closable v-for="btn in tag.children">{{btn.authName}}</el-tag>
+                </el-col>
+              </el-row>
+            </el-col>
+          </el-row>
+        </template>
+      </el-table-column>
         <el-table-column
           type="index"
           label="#"
@@ -75,5 +96,16 @@ export default {
 }
 .el-breadcrumb :hover {
   color: rgb(90, 159, 190);
+}
+.el-tag  {
+    margin-left: 5px;
+  }
+.authlist {
+  border-top: solid 1px #D3DCE6;
+  padding-bottom: 5px;
+}
+.arrow {
+  font-size: 18px;
+  font-weight: bold;
 }
 </style>
