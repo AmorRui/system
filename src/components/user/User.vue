@@ -6,8 +6,8 @@
       <el-breadcrumb-item :to="{ path: '/user' }">活动列表</el-breadcrumb-item>
     </el-breadcrumb>
     <div>
-      <el-input placeholder="请输入内容"  class="search">
-        <el-button slot="append" icon="el-icon-search"></el-button>
+      <el-input v-model="query" placeholder="请输入内容"  class="search">
+        <el-button @click='queryHandler' slot="append" icon="el-icon-search"></el-button>
       </el-input>
       <el-button type="info" plain @click="dialogVisibleAdd = true">添加用户</el-button>
     </div>
@@ -114,7 +114,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisibleAdd = false">取 消</el-button>
+        <el-button @click="dialogVisibleEdit = false">取 消</el-button>
         <el-button type="primary" @click="submitUserEdit">确 定</el-button>
       </span>
     </el-dialog>
@@ -164,6 +164,11 @@ export default {
     }
   },
   methods: {
+    // 关键字搜索
+    queryHandler () {
+      this.initList()
+    },
+    // 删除用户
     deleteHandler (row) {
       this.$confirm('此操作将永久删除用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
