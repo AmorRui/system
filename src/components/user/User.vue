@@ -9,7 +9,7 @@
       <el-input placeholder="请输入内容"  class="search">
         <el-button slot="append" icon="el-icon-search"></el-button>
       </el-input>
-      <el-button type="info" plain>添加用户</el-button>
+      <el-button type="info" plain @click="dialogVisibleAdd = true">添加用户</el-button>
     </div>
     <div>
       <el-table
@@ -71,14 +71,68 @@
         :total="total">
       </el-pagination>
     </div>
+        <!-- 添加用户弹窗 -->
+    <el-dialog
+      title="添加用户"
+      @close='closeUserDialog("add")'
+      :visible="dialogVisibleAdd"
+      width="50%">
+      <el-form ref="userform" :model="user" :rules="rules" label-width="80px">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="user.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="user.password"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="user.email"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" prop="mobile">
+          <el-input v-model="user.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleAdd = false">取 消</el-button>
+        <el-button type="primary" @click='submitUser'>确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {getUserData, toggleUserState} from '../../api/api.js'
+import {getUserData, toggleUserState, addUser} from '../../api/api.js'
 export default {
   data () {
     return {
+      // 添加
+      user: {
+        username: '',
+        password: '',
+        email: '',
+        mobile: ''
+      },
+      // 编辑
+      euser: {
+        username: '',
+        email: '',
+        mobile: ''
+      },
+      // form
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' }
+        ],
+        mobile: [
+          { required: true, message: '请输入手机号码', trigger: 'blur' }
+        ]
+      },
+      dialogVisibleAdd: false,
       query: '',
       currentPage: 1,
       total: 100,
@@ -87,6 +141,25 @@ export default {
     }
   },
   methods: {
+    // 提交用户
+    submitUser () {
+      // 提交用户信息
+      this.$refs['userform'].validate(valid => {
+        if (valid) {
+          // 表单验证通过，调用接口
+          addUser(this.user)
+            .then(res => {
+              if (res.meta.status === 201) {
+                // 关闭弹窗
+                this.dialogVisibleAdd = false
+                // 刷新列表
+                this.initList()
+              }
+            })
+        }
+      })
+    },
+    // 状态改变
     toggleUser (data) {
       toggleUserState({
         uId: data.id,
@@ -101,6 +174,17 @@ export default {
           }
         })
     },
+    // 关闭弹窗
+    closeUserDialog (flag) {
+      if (flag === 'add') {
+        this.dialogVisibleAdd = false
+      } else if (flag === 'edit') {
+        this.dialogVisibleEdit = false
+      } else {
+        this.dialogVisibleRole = false
+      }
+    },
+    // 分页
     handleSizeChange (val) {
       this.pagesize = val
       this.initList()
@@ -109,6 +193,7 @@ export default {
       this.currentPage = val
       this.initList()
     },
+    // 初始化
     initList () {
       getUserData({
         query: '',
