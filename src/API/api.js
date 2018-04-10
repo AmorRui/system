@@ -1,14 +1,12 @@
 import axios from 'axios'
-// 设置请求的基准路径
-// axios.defaults.baseURL = 'http://47.96.21.88:8888/api/private/v1/'
-axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
-// 登陆拦截器
+
+// axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
+axios.defaults.baseURL = 'http://47.96.21.88:8888/api/private/v1/'
+
 // 拦截器处理token
 axios.interceptors.request.use(function (config) {
-  // 获取当前是否存在token
   let token = localStorage.getItem('mytoken')
   if (token) {
-    // Authorization 请求头的键是前后台约定
     config.headers['Authorization'] = token
   }
   return config
@@ -61,14 +59,21 @@ export const editUser = (params) => {
 
 // delete user deleteUser
 export const deleteUser = (params) => {
-  return axios.delete('roles/' + params.id).then(res => {
+  return axios.delete('users/' + params.id).then(res => {
     return res.data
   })
 }
 
-// 权限管理-权限列表
+// get rightList
 export const rightList = (params) => {
   return axios.get('rights/' + params.type).then(res => {
+    return res.data
+  })
+}
+
+// get roleList
+export const roleList = () => {
+  return axios.get('roles').then(res => {
     return res.data
   })
 }

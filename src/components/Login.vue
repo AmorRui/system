@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import {login} from '../api/api.js'
+import {login} from '../API/api.js'
 export default {
   data () {
     return {

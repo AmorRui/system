@@ -7,7 +7,7 @@
     </el-breadcrumb>
     <div>
       <el-input v-model="query" placeholder="请输入内容"  class="search">
-        <el-button @click='queryHandler' slot="append" icon="el-icon-search"></el-button>
+        <el-button @click='queryHandler()' slot="append" icon="el-icon-search"></el-button>
       </el-input>
       <el-button type="info" plain @click="dialogVisibleAdd = true">添加用户</el-button>
     </div>
@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import {getUserData, toggleUserState, addUser, getUserById, editUser, deleteUser} from '../../api/api.js'
+import {getUserData, toggleUserState, addUser, getUserById, editUser, deleteUser} from '../../API/api.js'
 export default {
   data () {
     return {
@@ -278,7 +278,7 @@ export default {
     // 初始化
     initList () {
       getUserData({
-        query: '',
+        query: this.query,
         pagenum: this.currentPage,
         pagesize: this.pagesize
       })
