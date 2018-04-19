@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Promise } from 'core-js'
 
-axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
+axios.defaults.baseURL = 'http://http://dengrui.net:3333/api/private/v1/'
 
 // login拦截器处理token
 axios.interceptors.request.use(function (config) {
