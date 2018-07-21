@@ -1,6 +1,6 @@
 # system
 
-> A Vue.js project
+使用VUE搭建后台管理项目
 
 ## Build Setup
 
